@@ -1,10 +1,5 @@
 # AI-powered E-commerce Recommendation Platform 
 
-## Demo
-
-This application is deployed on Vercel. Please check it out  [here]().
-
-See admin dashboard [demo]().
 
 ## Introduction
 
