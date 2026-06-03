@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.backend.mapper.ProductMapper">
+    <resultMap id="BaseResultMap" type="com.example.backend.model.entity.Product">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="price" property="price" />
+        <result column="original_price" property="original_price" />
+        <result column="stock" property="stock" />
+        <result column="category" property="category" />
+        <result column="image_url" property="image_url" />
+        <result column="tags" property="tags" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, description, price, original_price, stock, category, image_url, tags, create_time, update_time
+    </sql>
+
+    <!-- pagination search -->
+    <select id="getProductsByCategory" resultType="com.example.backend.model.entity.Product">
+        SELECT * FROM products
+        WHERE category = #{category}
+        <if test="minPrice != null">
+            AND price >= #{minPrice}
+        </if>
+        <if test="maxPrice != null">
+            AND price &lt;= #{maxPrice}
+        </if>
+        <if test="brand != null">
+            AND tags LIKE CONCAT('%', #{brand}, '%')
+        </if>
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- SQL to fetch total count of products in a category -->
+    <select id="getTotalProductCount" resultType="int">
+        SELECT COUNT(*) FROM products
+        WHERE category = #{category}
+        <if test="priceRange != null">
+            <bind name="prices" value="priceRange.split('-')"/>
+            <if test="prices != null and prices.length == 2">
+                AND price >= #{prices[0]} AND price &lt;= #{prices[1]}
+            </if>
+        </if>
+        <if test="brand != null">
+            AND tags LIKE CONCAT('%', #{brand}, '%')
+        </if>
+    </select>
+
+</mapper>
